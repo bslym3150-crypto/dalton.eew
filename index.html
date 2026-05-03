@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DALTON GANG | OFFICIAL</title>
+    <style>
+        :root { --p: #8a2be2; --grad: linear-gradient(135deg, #1a0a2e 0%, #050505 100%); }
+        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Cairo', sans-serif; background: #000; color: white; overflow-x: hidden; }
+
+        /* الخلفية: إلغاء السواد وتفعيل الصورة */
+        .bg-layer {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(26, 10, 46, 0.6), rgba(0, 0, 0, 0.8)), url('main_bg.jpg'), url('main_bg.png');
+            background-size: cover; background-position: center; z-index: -1;
+            filter: saturate(1.2);
+        }
+
+        /* شاشة الترحيب */
+        #intro {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 9999; transition: 1.5s;
+        }
+        .intro-txt { font-size: 50px; font-weight: 900; text-shadow: 0 0 30px var(--p); animation: glow 2s infinite ease-in-out; }
+        
+        /* الصفحة الرئيسية بتوزيع الأزرار الجديد */
+        .main-ui { 
+            display: flex; flex-direction: column; align-items: center; 
+            justify-content: space-between; min-height: 100vh; 
+            opacity: 0; transition: 2s; padding: 60px 40px; box-sizing: border-box;
+        }
+        .active-ui { opacity: 1; }
+
+        .logo-section { display: flex; gap: 100px; margin-top: auto; margin-bottom: auto; }
+        .logo-circ {
+            width: 220px; height: 220px; border-radius: 50%; opacity: 0.8;
+            border: 5px solid var(--p); transition: 0.5s; cursor: pointer;
+            box-shadow: 0 0 40px rgba(138, 43, 226, 0.4); object-fit: cover;
+        }
+        .logo-circ:hover { opacity: 1; transform: scale(1.1); box-shadow: 0 0 60px var(--p); }
+
+        /* توزيع الأزرار يمين ويسار */
+        .nav-bottom { 
+            display: flex; width: 100%; justify-content: space-between; 
+            align-items: center; margin-top: auto; 
+        }
+        .btn-nav {
+            padding: 20px 60px; font-size: 26px; font-weight: bold; color: white;
+            background: rgba(138, 43, 226, 0.2); border: 3px solid var(--p);
+            border-radius: 50px; cursor: pointer; transition: 0.4s; text-decoration: none;
+            backdrop-filter: blur(15px); box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .btn-nav:hover { background: var(--p); transform: translateY(-10px); box-shadow: 0 0 50px var(--p); }
+
+        /* الصفحات الداخلية */
+        .page { display: none; padding: 80px 40px; max-width: 1200px; margin: auto; animation: zoomIn 0.5s forwards; }
+        @keyframes zoomIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+
+        /* زر العودة المطور */
+        .floating-back {
+            position: fixed; top: 30px; right: 30px; padding: 12px 30px;
+            background: var(--p); color: white; border-radius: 10px;
+            font-weight: bold; cursor: pointer; border: none; z-index: 100;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5); transition: 0.3s;
+        }
+        .floating-back:hover { transform: scale(1.1); background: white; color: var(--p); }
+
+        /* شكل المسؤولين الجديد (ID Cards) */
+        .staff-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 50px; }
+        .id-card {
+            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(138, 43, 226, 0.3);
+            padding: 30px; border-radius: 20px; text-align: center; position: relative;
+            overflow: hidden; backdrop-filter: blur(10px);
+        }
+        .id-card::before { content: 'DALTON'; position: absolute; top: -10px; left: -10px; font-size: 40px; opacity: 0.05; font-weight: 900; }
+        .rank-badge { background: var(--p); padding: 5px 15px; border-radius: 5px; font-size: 12px; font-weight: bold; }
+        .member-name { display: block; font-size: 32px; margin-top: 15px; font-weight: 800; letter-spacing: 1px; }
+
+        /* القوانين البنفسجية */
+        .rule-card {
+            background: rgba(138, 43, 226, 0.1); border-left: 6px solid var(--p);
+            padding: 25px; margin-bottom: 20px; border-radius: 15px; font-size: 20px;
+            transition: 0.4s;
+        }
+        .rule-card:hover { background: rgba(138, 43, 226, 0.3); transform: translateX(-15px); }
+    </style>
+</head>
+<body>
+
+    <div class="bg-layer"></div>
+
+    <div id="intro" onclick="playOnce()">
+        <h1 class="intro-txt">DALTON GANG</h1>
+        <p style="font-size: 20px; color: #888;">اضغط في أي مكان للدخول...</p>
+    </div>
+
+    <!-- الواجهة الرئيسية -->
+    <div id="home" class="main-ui">
+        <div style="text-align: center;">
+            <h2 style="font-size: 20px; letter-spacing: 5px; color: var(--p);">THE ROYAL CLAN</h2>
+            <p style="font-size: 18px; opacity: 0.7;">منور العصابة.. وشكراً لأنك اخترت عصابتنا</p>
+        </div>
+
+        <div class="logo-section">
+            <img src="dalton_logo.png" class="logo-circ" alt="Dalton">
+            <img src="server_logo.png" class="logo-circ" alt="Server">
+        </div>
+
+        <div class="nav-bottom">
+            <button class="btn-nav" onclick="showPage('rules')">قراءة القوانين</button>
+            <button class="btn-nav" onclick="showPage('staff')">مسؤولين العصابة</button>
+        </div>
+    </div>
+
+    <!-- صفحة القوانين -->
+    <div id="rules" class="page">
+        <button class="floating-back" onclick="showPage('home')">العودة للرئيسية ↩</button>
+        <h1 style="font-size: 50px; border-bottom: 4px solid var(--p); padding-bottom: 20px;">الميثاق الملكي</h1>
+        <div id="rules-list"></div>
+    </div>
+
+    <!-- صفحة المسؤولين -->
+    <div id="staff" class="page">
+        <button class="floating-back" onclick="showPage('home')">العودة للرئيسية ↩</button>
+        <h1 style="text-align: center; font-size: 45px; margin-bottom: 50px;">الهرم القيادي</h1>
+        
+        <div class="id-card" style="max-width: 500px; margin: 0 auto 50px auto; border: 2px solid gold;">
+            <span class="rank-badge" style="background: gold; color: black;">SUPREME LEADER / BOSS</span>
+            <span class="member-name">_l3ep</span>
+        </div>
+
+        <div class="staff-grid">
+            <div class="id-card"><span class="rank-badge">CO-BOSS</span><span class="member-name">pqfy9</span></div>
+            <div class="id-card"><span class="rank-badge">GENERAL MANAGER</span><span class="member-name">asd702._67157</span></div>
+            <div class="id-card"><span class="rank-badge">CO-MANAGER</span><span class="member-name">qjizn</span></div>
+            <div class="id-card"><span class="rank-badge">CO-MANAGER</span><span class="member-name">tamim__0073</span></div>
+        </div>
+    </div>
+
+    <!-- صوت النقرة -->
+    <audio id="btnSound" src="https://www.soundjay.com/buttons/button-16.mp3"></audio>
+
+    <script>
+        const rulesArr = [
+            "احترام مسؤولي العصابة واجب؛ مخالفتهم تعرضك للإنذار الأول.",
+            "عند وصولك إلى (٣) إنذارات، سيتم طردك فوراً من العصابة.",
+            "في حال تم 'تدبيلك' في الراديو وقت المداهمة، سيتم محاسبتك.",
+            "يمنع القيام بأي مداهمة دون إذن مسبق؛ المخالفة تعني الفصل.",
+            "خيانة العصابة أو تسريب المعلومات = فصل + بلاك ليست نهائي.",
+            "التعاون مع العسكريين أو الأعداء = بلاك ليست + فصل مباشر.",
+            "عدم الالتزام بقوانين السرقة في السيرفر الأساسي = طرد.",
+            "يمنع افتعال المشاكل الداخلية؛ أي نزاع يحل عبر المسؤولين.",
+            "الالتزام بالزي الرسمي والسيارات المعتمدة في المهام الرسمية.",
+            "التفاعل الأسبوعي إلزامي؛ الغياب بدون عذر يعرضك للاستبعاد.",
+            "يمنع طلب الرتب نهائياً؛ الرتبة تُعطى بالاجتهاد والولاء فقط.",
+            "التواجد في الراديو إلزامي عند دخولك للمدينة.",
+            "يمنع التخريب على عمليات الحلفاء أو سرقة غنائمهم.",
+            "يجب إبلاغ الإدارة عند الغياب عن المدينة لأكثر من 3 أيام.",
+            "يمنع استخدام اسم العصابة في مشاكل شخصية.",
+            "الهدوء التام في الراديو وقت العمليات العسكرية الكبرى.",
+            "ممنوع استخدام الأسلحة الثقيلة إلا بأمر مباشر من القائد.",
+            "أي عضو يتم القبض عليه، لا يمنح أي معلومات عن زملائه.",
+            "الولاء للعصابة فوق كل شيء؛ دالتون هي عائلتك الأولى.",
+            "قائد العصابة (The Boss) هو المرجع النهائي لجميع القرارات."
+        ];
+
+        function loadRules() {
+            const list = document.getElementById('rules-list');
+            rulesArr.forEach((r, i) => {
+                list.innerHTML += `<div class="rule-card"><b style="color:var(--p)">#${i+1}</b> &nbsp; ${r}</div>`;
+            });
+        }
+
+        function playOnce() {
+            document.getElementById('btnSound').play();
+            const intro = document.getElementById('intro');
+            intro.style.opacity = '0';
+            setTimeout(() => {
+                intro.style.display = 'none';
+                document.getElementById('home').classList.add('active-ui');
+            }, 1000);
+        }
+
+        function showPage(pId) {
+            document.getElementById('btnSound').play();
+            document.querySelectorAll('.page, .main-ui').forEach(el => { el.style.display = 'none'; el.classList.remove('active-ui'); });
+            if(pId === 'home') {
+                document.getElementById('home').style.display = 'flex';
+                setTimeout(() => document.getElementById('home').classList.add('active-ui'), 50);
+            } else {
+                document.getElementById(pId).style.display = 'block';
+            }
+        }
+
+        window.onload = loadRules;
+    </script>
+<!-- ===== DALTON FULL UPGRADE PACK ===== -->
+
+<style>
+
+/* 🌫️ دخان أقوى */
+.smoke {
+    position: fixed;
+    width: 300%;
+    height: 300%;
+    top: -100%;
+    left: -100%;
+    background: url('https://i.imgur.com/3QbXxQk.png');
+    background-size: cover;
+    opacity: 0.16;
+    animation: smokeMove 160s linear infinite;
+    z-index: -10;
+    pointer-events: none;
+    filter: blur(2px);
+}
+
+@keyframes smokeMove {
+    from { transform: translate(0,0); }
+    to { transform: translate(-1000px,-900px); }
+}
+
+/* زر ديسكورد */
+.discord-join {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: #5865F2;
+    color: white;
+    padding: 12px 18px;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 9999;
+    box-shadow: 0 0 20px rgba(88,101,242,0.5);
+}
+
+/* hover للأعضاء */
+.id-card {
+    cursor: pointer;
+    transition: 0.25s;
+}
+.id-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px var(--p);
+}
+
+</style>
+
+<!-- 🌫️ دخان -->
+<div class="smoke"></div>
+
+<!-- 🔗 زر دخول الديسكورد -->
+<div class="discord-join" onclick="window.open('https://discord.gg/PYBDqcyWS','_blank')">
+🚀 دخول ديسكورد العصابة
+</div>
+
+<script>
+
+/* ===== روابط ديسكورد للأعضاء ===== */
+const discordLinks = {
+    "_l3ep": "https://discord.com/users/ID_BOSS",
+    "pqfy9": "https://discord.com/users/ID_CO",
+    "asd702._67157": "https://discord.com/users/ID_GM",
+    "qjizn": "https://discord.com/users/ID_CM1",
+    "tamim__0073": "https://discord.com/users/ID_CM2"
+};
+
+/* ===== جعل الأعضاء قابلين للضغط ===== */
+function setupDiscordClick(){
+    document.querySelectorAll(".id-card .member-name").forEach(el=>{
+        let name = el.innerText.trim();
+        let url = discordLinks[name];
+
+        if(url){
+            el.parentElement.onclick = ()=> window.open(url,'_blank');
+        }
+    });
+}
+
+/* ===== ترتيب القيادات ===== */
+function reorderStaff(){
+
+    const staff = document.querySelector("#staff .staff-grid");
+    if(!staff) return;
+
+    let cards = Array.from(staff.children);
+
+    let boss = document.querySelector("#staff .id-card"); // أول واحد (البوس)
+    let coBoss = cards.find(c => c.innerText.includes("CO-BOSS"));
+
+    let others = cards.filter(c =>
+        !c.innerText.includes("SUPREME") &&
+        !c.innerText.includes("CO-BOSS")
+    );
+
+    staff.innerHTML = "";
+
+    if(boss) staff.appendChild(boss);
+    if(coBoss) staff.appendChild(coBoss);
+    others.forEach(c=> staff.appendChild(c));
+}
+
+/* ===== تشغيل كل شيء ===== */
+window.addEventListener("load", ()=>{
+    setupDiscordClick();
+    reorderStaff();
+});
+
+</script>
+
+<!-- ===== END UPGRADE ===== -->
+</body>
+</html>
